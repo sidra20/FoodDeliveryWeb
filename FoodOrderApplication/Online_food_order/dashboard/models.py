@@ -85,9 +85,17 @@ class Cart(models.Model): #Customer
     dish = models.ForeignKey(Dishes, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     resturant = models.ForeignKey(Resturant, on_delete=models.CASCADE)
+    quantity = models.IntegerField
 
 class Checkout(models.Model):
-    pass
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    customer_name = models.CharField(max_length=255)
+    customer_address = models.CharField(max_length=255)
+    customer_phone = models.CharField(max_length=11)
+    address_type = models.CharField(max_length=200)
+    zipcode = models.CharField(max_length=11)
+
 
 class Order(models.Model):
     pass
