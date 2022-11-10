@@ -8,6 +8,7 @@ class User(models.Model):
     name = models.CharField(max_length=200)
     email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=32)
+    date = models.DateTimeField
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
  #veg/non veg etc
@@ -23,7 +24,7 @@ class Books(models.Model): #ADMIN
     book_name = models.CharField(max_length=200, unique=True)
     book_author = models.CharField(max_length=200)
     book_cover = models.ImageField
-    book = models.CharField # book pdf field....?????????????
+    book = models.CharField(max_length=255) # book pdf field....?????????????
 
 class Resturant(models.Model):  #RESTURANT OWNER
     name = models.CharField(max_length=200)
@@ -38,8 +39,9 @@ class ResturantRatings(models.Model):
     person_name = models.CharField(max_length=255)
     person_email = models.CharField(max_length=255)
     review = models.CharField(max_length=255)
-    ratings = models.IntegerField(max_length=1)
-    date = models.DateTimeField
+    ratings = models.IntegerField
+    date = models.DateField
+    time = models.TimeField
 
 
 
@@ -48,10 +50,12 @@ class Menu(models.Model): # RESTURANT OWNER
     resturant = models.ForeignKey(Resturant, on_delete=models.CASCADE)
     menu_name = models.CharField(max_length=200, unique=True)
 
-class Dishes(models.Model): #RESTUTANT OWNER
-    food_name = models.CharField(max_length=200)
+#RESTUTANT OWNER
+class Dishes(models.Model):
+    foodName = models.CharField(max_length=200)
     food_details = models.CharField(max_length=255)
-    food_price = models.DecimalField(max_length=20)
+    price = models.CharField(max_length=11)
+    #food_price = models.DecimalField(max_digits = 15, decimal_places = 2,)
     food_image = models.ImageField
     date = models.DateTimeField
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
@@ -65,7 +69,7 @@ class DishReview(models.Model):
     person_email = models.CharField(max_length=255)
     date = models.DateTimeField
     review = models.CharField(max_length=255)
-    ratings = models.IntegerField(max_length=1)
+    ratings = models.IntegerField
 
 
 class MenuCards(models.Model): #RESTURANT OWNER
@@ -80,7 +84,8 @@ class Videos(models.Model): #RESTURANT OWNER
 class Coupens(models.Model):  # RESTURANT OWNER
     resturant = models.ForeignKey(Resturant, on_delete=models.CASCADE)
     coupen = models.CharField(max_length=5)
-    discount = models.IntegerField(max_length=2)
+    discount = models.IntegerField
+
 class Cart(models.Model): #Customer
     dish = models.ForeignKey(Dishes, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -95,6 +100,7 @@ class Checkout(models.Model):
     customer_phone = models.CharField(max_length=11)
     address_type = models.CharField(max_length=200)
     zipcode = models.CharField(max_length=11)
+    total = models.CharField(max_length=200)
 
 
 class Order(models.Model):
