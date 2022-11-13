@@ -3,14 +3,14 @@ from django.db import models
 # Create your models here.
 class Roles(models.Model):
     role = models.CharField(max_length=50, unique=True)
-#
-# class Users(models.Model):
-#     name = models.CharField(max_length=200)
-#     email = models.CharField(max_length=255, unique=True)
-#     password = models.CharField(max_length=32)
-#     date = models.DateTimeField
-#     role = models.ForeignKey(Roles, on_delete=models.CASCADE)
-#
+
+class Users(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.CharField(max_length=255, unique=True)
+    password = models.CharField(max_length=32)
+    date = models.DateTimeField
+    role = models.ForeignKey(Roles, on_delete=models.CASCADE)
+
 #  #veg/non veg etc
 # class FoodTypes(models.Model):   #ADMIN
 #     foodtype = models.CharField(max_length=200, unique=True)
