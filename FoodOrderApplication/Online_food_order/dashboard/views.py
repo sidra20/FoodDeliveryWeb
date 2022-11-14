@@ -98,7 +98,7 @@ def register_store(request):
                 messages.error(request, "Password do not match.")
             elif not re.match(r'^[A-Za-z ]{3,150}$', name):
                 messages.error(request, "Name is not correct in format!")
-            elif not re.match(r'^[A-Za-z]{3,50}[0-9@#$%&*^!]{3,50}$', password):
-                messages.error(request, "Password should contain alphabets and numbers!/8!")
+            elif not re.match(r'^[A-Za-z]{1,15}[0-9@#$%&*^!]{1,15}$', password):
+                messages.error(request, "Password should contain numbers or special charater!")
 
     return redirect('/dashboard/register')

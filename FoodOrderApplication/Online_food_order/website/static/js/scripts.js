@@ -878,4 +878,8 @@ document.addEventListener('gesturestart', function (e) {
 $(document).ready(function () {
     initRestabook();
     initparallax();
+
+
+    })
+    }
 });

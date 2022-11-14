@@ -12,20 +12,20 @@ class Users(models.Model):
     role = models.ForeignKey(Roles, on_delete=models.CASCADE)
 
 #  #veg/non veg etc
-# class FoodTypes(models.Model):   #ADMIN
-#     foodtype = models.CharField(max_length=200, unique=True)
-#
+class FoodTypes(models.Model):   #ADMIN
+    foodtype = models.CharField(max_length=200, unique=True)
+
 #
 # #italian/bbq/fast food etc
-# class Categories(models.Model):  #ADMIN
-#     category = models.CharField(max_length=200, unique=True)
-#
+class Categories(models.Model):  #ADMIN
+    category = models.CharField(max_length=200, unique=True)
+
 # class Books(models.Model): #ADMIN
 #     book_name = models.CharField(max_length=200, unique=True)
 #     book_author = models.CharField(max_length=200)
 #     book_cover = models.CharField(max_length=255)
 #     book = models.CharField(max_length=255) # book pdf field....?????????????
-#
+
 # class Resturants(models.Model):  #RESTURANT OWNER
 #     name = models.CharField(max_length=200)
 #     location = models.CharField(max_length=255)

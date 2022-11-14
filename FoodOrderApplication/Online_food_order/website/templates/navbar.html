@@ -89,16 +89,16 @@
                                 <nav>
                                     <ul>
                                         <li>
-                                            <a href="#">Home <i class="fas fa-caret-down"></i></a>
+                                            <a href="/website/index">Home</a>
                                             <!--second level -->
-                                            <ul>
-                                                <li><a href="index.html">Parallax Image</a></li>
-                                                <li><a href="index2.html">Slider</a></li>
-                                                <li><a href="index3.html">Carousel</a></li>
-                                                <li><a href="index4.html">Slideshow</a></li>
-                                                <li><a href="index5.html">Video</a></li>
-                                                <li><a href="onepage.html">One Page</a></li>
-                                            </ul>
+<!--                                            <ul>-->
+<!--                                                <li><a href="index.html">Parallax Image</a></li>-->
+<!--                                                <li><a href="index2.html">Slider</a></li>-->
+<!--                                                <li><a href="index3.html">Carousel</a></li>-->
+<!--                                                <li><a href="index4.html">Slideshow</a></li>-->
+<!--                                                <li><a href="index5.html">Video</a></li>-->
+<!--                                                <li><a href="onepage.html">One Page</a></li>-->
+<!--                                            </ul>-->
                                             <!--second level end-->
                                         </li>
                                         <li>
@@ -111,7 +111,7 @@
                                             </ul>
                                             <!--second level end-->
                                         </li>
-                                        <li><a href="about.html" class="">About</a></li>
+                                        <li><a href="/website/about" class="">About</a></li>
                                         <li><a href="contact.html">Contact</a></li>
                                         <li><a href="blog.html">Resturants</a></li>
                                         <li><a href="blog.html">Menu</a></li>
@@ -143,21 +143,14 @@
                                         <div class="widget-posts fl-wrap">
                                             <ol>
                                                 <li class="clearfix">
-                                                    <a href="#"  class="widget-posts-img"><img src="images/menu/1.jpg" class="respimg" alt=""></a>
+                                                    <a href="#"  class="widget-posts-img"><img src="{% static 'images/menu/1.jpg' %}" class="respimg" alt=""></a>
                                                     <div class="widget-posts-descr">
                                                         <a href="#" title="">Grilled Steaks</a>
                                                         <div class="widget-posts-descr_calc clearfix">1 <span>x</span> $45</div>
                                                     </div>
                                                     <div class="clear-cart_button"><i class="fal fa-times"></i></div>
                                                 </li>
-                                                <li class="clearfix">
-                                                    <a href="#"  class="widget-posts-img"><img src="images/menu/2.jpg" class="respimg" alt=""></a>
-                                                    <div class="widget-posts-descr">
-                                                        <a href="#" title="">Cripsy Lobster & Shrimp Bites</a>
-                                                        <div class="widget-posts-descr_calc clearfix">2 <span>x</span> $22</div>
-                                                    </div>
-                                                    <div class="clear-cart_button"><i class="fal fa-times"></i></div>
-                                                </li>
+
 
                                             </ol>
                                         </div>
@@ -166,9 +159,9 @@
                                 <div class="header-cart_wrap_total fl-wrap">
                                     <div class="header-cart_wrap_total_item">Subtotal : <span>$147</span></div>
                                 </div>
-                                <div class="header-cart_wrap_footer fl-wrap">
-                                    <a href="cart.html"> View Cart</a>
-                                    <a href="checkout.html">  Checkout</a>
+                                <div class="header-cart_wrap_footer fl-wrap ">
+                                    <a href="/website/cart" style="width:100%"> View Cart</a>
+<!--                                    <a href="checkout.html">  Checkout</a>-->
                                 </div>
                             </div>
                             <!-- header-cart_wrap end  -->
