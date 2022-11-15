@@ -7,7 +7,7 @@ from .models import *
 
 import sys, os
 sys.path.append(os.path.abspath('../dashboard/models.py'))
-
+from dashboard.models import *
 
 
 # Create your views here.
@@ -31,5 +31,5 @@ def checkout(request):
     return render(request,'checkout.html')
 
 def userRegister(request):
-    # role = Roles.objects.all()
-    return render(request,'user_register.html')
+     role = Roles.objects.all()
+     return render(request,'user_register.html',{'role':role})
