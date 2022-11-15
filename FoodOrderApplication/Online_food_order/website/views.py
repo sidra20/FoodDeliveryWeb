@@ -29,7 +29,12 @@ def foodItem(request):
     return render(request,'fooditem.html')
 
 def cart(request):
-    return render(request,'cart.html')
+    userid = request.session.get('user_id')
+    if userid:
+        return render(request, 'cart.html')
+    else:
+        return render(request, 'user_login.html')
+
 
 def checkout(request):
     return render(request,'checkout.html')
