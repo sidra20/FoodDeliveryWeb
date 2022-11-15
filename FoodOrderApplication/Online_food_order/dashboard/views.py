@@ -6,9 +6,10 @@ from django.shortcuts import render, redirect
 from .models import *
 
 
+
 # Create your views here.
 
-def index(request):
+def dashboard(request):
 
     return render(request, 'index.html')
 
@@ -101,4 +102,4 @@ def register_store(request):
             elif not re.match(r'^[A-Za-z]{1,15}[0-9@#$%&*^!]{1,15}$', password):
                 messages.error(request, "Password should contain numbers or special charater!")
 
-    return redirect('/dashboard/register')
+    return redirect('../website/register')

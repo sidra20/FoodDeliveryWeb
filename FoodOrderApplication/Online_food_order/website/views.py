@@ -1,4 +1,14 @@
-from django.shortcuts import render
+import re
+from datetime import date
+
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import *
+
+import sys, os
+sys.path.append(os.path.abspath('../dashboard/models.py'))
+
+
 
 # Create your views here.
 
@@ -19,3 +29,7 @@ def cart(request):
 
 def checkout(request):
     return render(request,'checkout.html')
+
+def userRegister(request):
+    # role = Roles.objects.all()
+    return render(request,'user_register.html')
