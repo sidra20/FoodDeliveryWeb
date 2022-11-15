@@ -7,7 +7,7 @@ class Roles(models.Model):
 class Users(models.Model):
     name = models.CharField(max_length=200)
     email = models.CharField(max_length=255, unique=True)
-    password = models.CharField(max_length=32)
+    password = models.CharField(max_length=255)
     date = models.DateTimeField
     role = models.ForeignKey(Roles, on_delete=models.CASCADE)
 

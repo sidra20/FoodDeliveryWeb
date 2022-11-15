@@ -4,6 +4,7 @@ from datetime import date
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from .models import *
+from django.contrib.auth.hashers import make_password, check_password
 
 
 
@@ -58,7 +59,7 @@ def delete_role(request,pk):
 
 # USERS
 def register(request):
-    role = Roles.objects.all()
+    role = Roles.objects.filter(role="Customer")
     return render(request, 'register.html', {'role': role})
 
 def register_store(request):
@@ -71,9 +72,11 @@ def register_store(request):
     today = date.today()
     d = today.strftime("%d/%m/%Y")
 
+
+
     usersObj.name=name
     usersObj.email=email
-    usersObj.password=password
+    usersObj.password=make_password(password)
     usersObj.date=d
     usersObj.role_id=userrole
 
@@ -101,5 +104,9 @@ def register_store(request):
                 messages.error(request, "Name is not correct in format!")
             elif not re.match(r'^[A-Za-z]{1,15}[0-9@#$%&*^!]{1,15}$', password):
                 messages.error(request, "Password should contain numbers or special charater!")
-
+            elif Users.objects.filter(email=email):
+                messages.error(request, "Email already exists!")
+            else:
+                usersObj.save()
+                messages.success(request,"Registered successfully!")
     return redirect('../website/register')
