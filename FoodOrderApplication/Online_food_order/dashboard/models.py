@@ -19,6 +19,9 @@ class FoodTypes(models.Model):   #ADMIN
 # #italian/bbq/fast food etc
 class Categories(models.Model):  #ADMIN
     category = models.CharField(max_length=200, unique=True)
+    img = models.ImageField(upload_to='images/', default=None)
+
+
 
 # class Books(models.Model): #ADMIN
 #     book_name = models.CharField(max_length=200, unique=True)

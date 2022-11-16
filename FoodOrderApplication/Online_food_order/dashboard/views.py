@@ -110,3 +110,36 @@ def register_store(request):
                 usersObj.save()
                 messages.success(request,"Registered successfully!")
     return redirect('../website/register')
+
+
+#categories index
+def category_index(request):
+    cat = Categories.objects.all()
+    return render(request,'categories.html',{'cat':cat})
+
+def category_store(request):
+    catList = Categories.objects.all()
+    error =""
+    success=""
+    cat = Categories()
+    category = request.POST.get('category')
+    img = request.FILES.get('image')
+
+    cat.category = category
+    cat.img = img
+
+    if not category:
+        error = "Fields are required!"
+    if not img:
+        error = "Fields are required!"
+    elif len(category)<3:
+        error = "Fields are required!"
+    elif not re.match(r'^[A-Za-z ]{3,150}$', category):
+        error = "Category nae should only contain alphabets!"
+    elif Categories.objects.filter(category=category):
+        error =  "Category already exists!"
+    else:
+        cat.save()
+        success="Category added successfully!"
+
+    return render(request,'categories.html',{'success':success,'error':error,'cat':catList})
