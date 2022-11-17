@@ -71,6 +71,9 @@ def login_store(request):
                 request.session['user_id']=user.id
                 request.session['user_name']=user.name
                 request.session['user_email']=user.email
+
+                #SELECT Users.role_id, Roles.role FROM Users INNER JOIN Roles ON Users.role_id = Roles.id;
+                #select * from Users join Roles on user.role_id = role.id where roles.role='Admin
                 return redirect('/website/index')
             else:
                 messages.error(request, "Wrong password")

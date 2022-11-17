@@ -12,5 +12,8 @@ urlpatterns = [
     path('register_store', views.register_store),
     path('categories', views.category_index),
     path('category_store', views.category_store),
+    path('category_delete/<int:pk>', views.category_delete, name="deleteCategory"),
+    path('category_edit/<str:pk>', views.category_edit),
+    path('category_update', views.category_update),
 
 ]

@@ -1,11 +1,17 @@
+import os
 import re
 from datetime import date
 
 from django.contrib import messages
 from django.shortcuts import render, redirect
+
+from .encryption_util import encrypt
 from .models import *
 from django.contrib.auth.hashers import make_password, check_password
+from dashboard.encryption_util import *
 
+from django.core.signing import Signer
+import base64
 
 
 # Create your views here.
@@ -114,8 +120,25 @@ def register_store(request):
 
 #categories index
 def category_index(request):
-    cat = Categories.objects.all()
-    return render(request,'categories.html',{'cat':cat})
+    cat = Categories.objects.values('id','category')
+    catObj = Categories()
+    signer = Signer()
+    # encrypt_key = signer.sign_object(catObj.id)
+    # decrypt_key = signer.unsign_object(encrypt_key)
+    encrypt_key = base64.b64encode(catObj.id)
+    # li=[]
+    # for i in cat:
+    #     encrypt_key = base64.b64encode(i['id'])
+    #     i['id'] = encrypt_key
+    #     li.append(i)
+
+
+    # li=[]
+    # for i in cat:
+    #     i['encrypt_key'] = encrypt(i['id'])
+    #     i['id'] = i['id']
+    #     li.append(i)
+    return render(request,'categories.html',{'cat':cat,'encrypt_key':encrypt_key})
 
 def category_store(request):
     catList = Categories.objects.all()
@@ -133,13 +156,64 @@ def category_store(request):
     if not img:
         error = "Fields are required!"
     elif len(category)<3:
-        error = "Fields are required!"
+        error = "Must be more than 3 characters."
     elif not re.match(r'^[A-Za-z ]{3,150}$', category):
-        error = "Category nae should only contain alphabets!"
+        error = "Category name should only contain alphabets!"
     elif Categories.objects.filter(category=category):
-        error =  "Category already exists!"
+        error = "Category already exists!"
     else:
         cat.save()
         success="Category added successfully!"
 
     return render(request,'categories.html',{'success':success,'error':error,'cat':catList})
+
+
+def category_delete(request,pk):
+
+    cat = Categories.objects.get(id=pk)
+    if(len(cat.img)>0):
+        os.remove(cat.img.path)
+    cat.delete();
+    messages.success(request,"Catgorry deleted successfully!")
+    return redirect('/dashboard/categories')
+
+def category_edit(request,pk):
+    signer = Signer()
+    decrypt_key = signer.unsign_object(pk)
+
+    cat = Categories.objects.get(id=decrypt_key)
+
+    return render(request,'category_edit.html',{'cat':cat})
+
+def category_update(request):
+    editerror = ""
+    catList = Categories.objects.all()
+    cat = Categories.objects.get(id=request.POST.get('id'))
+    category = request.POST.get('category')
+    img = request.FILES.get('image')
+
+
+
+    if not category:
+        editerror = "Couldn't update.Fields are required!"
+    if not img:
+        editerror = "Couldn't update.Fields are required!"
+
+    elif not re.match(r'^[A-Za-z ]{3,150}$', category):
+        editerror = "Couldn't update. Category nae should only contain alphabets!"
+
+
+    else:
+
+        if (len(request.FILES.get('image')) != 0):
+            if (len(cat.img) > 0):
+                os.remove(cat.img.path)
+        cat.img = img
+        cat.category = category
+
+        cat.save(update_fields=['category','img'])
+
+        messages.success(request, "Catgorry updated successfully!")
+
+
+    return render(request,'categories.html',{'editerror':editerror,'cat':catList})
