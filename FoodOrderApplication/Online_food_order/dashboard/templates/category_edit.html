@@ -91,7 +91,7 @@ font-size:15px
 
                         {% csrf_token %}
 
-                        <input type="hidden" value="{{cat.encrypt_key}}" name="id"/>
+                        <input type="hidden" value="{{decryptId}}" name="id"/>
                         <label>Category Name</label>
 
                         <input type="text" class="form-control" name="category" value="{{cat.category}}"

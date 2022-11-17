@@ -14,10 +14,10 @@ from django.core.signing import Signer
 import base64
 
 
+
 # Create your views here.
 
 def dashboard(request):
-
     return render(request, 'index.html')
 
 
@@ -37,10 +37,8 @@ def role_store(request):
     rolesObj.role = roles
     if not request.POST.get('role'):
         messages.error(request, "The fields are required!")
-
     if not re.match(r'^[A-Za-z ]{3,50}$', request.POST.get('role')):
         messages.error(request, "Incorrect format!")
-
     else:
         if Roles.objects.filter(role=roles):
             messages.error(request, "Already exists!")
@@ -64,9 +62,9 @@ def delete_role(request,pk):
     return redirect('/dashboard/roles')
 
 # USERS
-def register(request):
-    role = Roles.objects.filter(role="Customer")
-    return render(request, 'register.html', {'role': role})
+# def register(request):
+#     role = Roles.objects.filter(role="Customer")
+#     return render(request, 'register.html', {'role': role})
 
 def register_store(request):
     usersObj = Users()
@@ -77,8 +75,6 @@ def register_store(request):
     userrole = request.POST.get('role')
     today = date.today()
     d = today.strftime("%d/%m/%Y")
-
-
 
     usersObj.name=name
     usersObj.email=email
@@ -120,12 +116,16 @@ def register_store(request):
 
 #categories index
 def category_index(request):
-    cat = Categories.objects.values('id','category')
+    cat = Categories.objects.all()
     catObj = Categories()
+    strId = str(catObj.id)
+    encryptId=make_password(strId)
+    #encryptId=crypt.crypt(strId)
+    decryptId = check_password(strId, encryptId)
     signer = Signer()
     # encrypt_key = signer.sign_object(catObj.id)
     # decrypt_key = signer.unsign_object(encrypt_key)
-    encrypt_key = base64.b64encode(catObj.id)
+
     # li=[]
     # for i in cat:
     #     encrypt_key = base64.b64encode(i['id'])
@@ -138,7 +138,18 @@ def category_index(request):
     #     i['encrypt_key'] = encrypt(i['id'])
     #     i['id'] = i['id']
     #     li.append(i)
-    return render(request,'categories.html',{'cat':cat,'encrypt_key':encrypt_key})
+    userid = request.session.get('user_id')
+
+    if userid:
+        user = Users.objects.get(id=userid)
+        if user.role_id==2:
+            return render(request, 'categories.html',{'cat':cat,'encryptId':encryptId,'decryptId':decryptId})
+        else:
+            return redirect('../website/index')
+    else:
+        return redirect('../website/login')
+
+    # return render(request,'categories.html',{'cat':cat})
 
 def category_store(request):
     catList = Categories.objects.all()
@@ -164,7 +175,6 @@ def category_store(request):
     else:
         cat.save()
         success="Category added successfully!"
-
     return render(request,'categories.html',{'success':success,'error':error,'cat':catList})
 
 
@@ -178,10 +188,12 @@ def category_delete(request,pk):
     return redirect('/dashboard/categories')
 
 def category_edit(request,pk):
-    signer = Signer()
-    decrypt_key = signer.unsign_object(pk)
-
-    cat = Categories.objects.get(id=decrypt_key)
+    # signer = Signer()
+    # decrypt_key = signer.unsign_object(pk)
+    catObj = Categories()
+    strId = str(catObj.id)
+    decryptId = check_password(strId, pk)
+    cat = Categories.objects.get(id=decryptId)
 
     return render(request,'category_edit.html',{'cat':cat})
 
@@ -192,8 +204,6 @@ def category_update(request):
     category = request.POST.get('category')
     img = request.FILES.get('image')
 
-
-
     if not category:
         editerror = "Couldn't update.Fields are required!"
     if not img:
@@ -202,7 +212,6 @@ def category_update(request):
     elif not re.match(r'^[A-Za-z ]{3,150}$', category):
         editerror = "Couldn't update. Category nae should only contain alphabets!"
 
-
     else:
 
         if (len(request.FILES.get('image')) != 0):
@@ -210,10 +219,7 @@ def category_update(request):
                 os.remove(cat.img.path)
         cat.img = img
         cat.category = category
-
         cat.save(update_fields=['category','img'])
-
         messages.success(request, "Catgorry updated successfully!")
-
 
     return render(request,'categories.html',{'editerror':editerror,'cat':catList})

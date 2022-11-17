@@ -55,6 +55,7 @@ def getUser(email):
         return False
 def login_store(request):
 
+
     email = request.POST.get('email')
     password = request.POST.get('pass')
 
@@ -74,7 +75,11 @@ def login_store(request):
 
                 #SELECT Users.role_id, Roles.role FROM Users INNER JOIN Roles ON Users.role_id = Roles.id;
                 #select * from Users join Roles on user.role_id = role.id where roles.role='Admin
-                return redirect('/website/index')
+                if(user.role_id==7):
+                    return redirect('/website/index')
+                elif user.role_id==2:
+                    return redirect('../dashboard/categories')
+
             else:
                 messages.error(request, "Wrong password")
         else:
