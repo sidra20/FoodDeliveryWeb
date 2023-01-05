@@ -1,14 +1,17 @@
 import os
 import re
+from cryptography.fernet import Fernet
+import base64
+import logging
+import traceback
+from django.conf import settings
 from datetime import date
 
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
-from .encryption_util import encrypt
 from .models import *
 from django.contrib.auth.hashers import make_password, check_password
-from dashboard.encryption_util import *
 
 from django.core.signing import Signer
 import base64
@@ -16,6 +19,36 @@ import base64
 
 
 # Create your views here.
+
+def encrypt(txt):
+    try:
+        # convert integer etc to string first
+        txt = str(txt)
+        # get the key from settings
+        cipher_suite = Fernet(settings.ENCRYPT_KEY) # key should be byte
+        # #input should be byte, so convert the text to byte
+        encrypted_text = cipher_suite.encrypt(txt.encode('ascii'))
+        # encode to urlsafe base64 format
+        encrypted_text = base64.urlsafe_b64encode(encrypted_text).decode("ascii")
+        return encrypted_text
+    except Exception as e:
+        # log the error if any
+        print(e)
+        logging.getLogger("error_logger").error(traceback.format_exc())
+        return None
+
+
+def decrypt(txt):
+    try:
+        # base64 decode
+        txt = base64.urlsafe_b64decode(txt)
+        cipher_suite = Fernet(settings.ENCRYPT_KEY)
+        decoded_text = cipher_suite.decrypt(txt).decode("ascii")
+        return decoded_text
+    except Exception as e:
+        # log the error
+        logging.getLogger("error_logger").error(traceback.format_exc())
+        return None
 
 def dashboard(request):
     return render(request, 'index.html')
@@ -26,8 +59,27 @@ def menu(request):
 
 
 def roles(request):
-    role = Roles.objects.all()
-    return render(request, 'roles.html',{'role':role})
+    role = Roles.objects.values('id','role')
+    #role = Roles.objects.raw("SELECT * FROM dashboard_roles ORDER BY role")
+    l = []
+
+    for i in role:
+        i['encrypt_id'] = encrypt(i['id'])
+        i['id'] = i['id']
+
+        l.append(i)
+
+    print(l)
+    return render(request, 'roles.html',{'role':l})
+
+def view_role(request,pk):
+    pk = decrypt(pk)
+    try:
+        role = Roles.objects.get(id=pk)
+        return render(request, 'view_role.html', {'role': role})
+    except(Exception):
+        return render(request, 'pagenotfound.html', {'e': Exception})
+
 
 
 def role_store(request):
@@ -56,6 +108,7 @@ def role_store(request):
     return redirect('/dashboard/roles')
 
 def delete_role(request,pk):
+    pk = decrypt(pk)
     role = Roles.objects.filter(id=pk)
     role.delete()
     messages.success(request, "Role deleted!")

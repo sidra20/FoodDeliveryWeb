@@ -35,7 +35,7 @@
         <td>{{r.id}}</td>
         <td>{{r.role}}</td>
         <td>
-            <a href="{% url 'deleteRole' r.id  %}">Delete</a>
+            <a href="/dashboard/role_view/{{r.encrypt_id}}">View</a>
         </td>
     </tr>
     {% endfor %}

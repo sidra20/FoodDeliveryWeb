@@ -14,6 +14,8 @@ class Users(models.Model):
 #  #veg/non veg etc
 class FoodTypes(models.Model):   #ADMIN
     foodtype = models.CharField(max_length=200, unique=True)
+    imguid = models.CharField(max_length=255)
+    uuid = models.CharField(max_length=200)
 
 #
 # #italian/bbq/fast food etc
