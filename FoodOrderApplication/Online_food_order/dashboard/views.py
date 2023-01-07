@@ -64,8 +64,8 @@ def menu(request):
 
 def roles(request):
     #role = Roles.objects.values('id','role')
-    #role = Roles.objects.all().values()
-    role = Roles.objects.raw("SELECT * FROM dashboard_roles ORDER BY role")
+    role = Roles.objects.all()
+   # role = Roles.objects.raw("SELECT * FROM dashboard_roles ORDER BY role")
     l = []
 
     for i in role:
