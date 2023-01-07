@@ -9,6 +9,9 @@ urlpatterns = [
     path('roles_store', views.role_store),
     path('role_delete/<str:pk>', views.delete_role, name="deleteRole"),
     path('role_view/<str:pk>', views.view_role, name="viewRole"),
+    path('role_report', views.roles_report, name="roleReport"),
+    path('pdf_report', views.pdf_report_create, name="pdfReport"),
+
     path('register_store', views.register_store),
     path('categories', views.category_index),
     path('category_store', views.category_store),

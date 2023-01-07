@@ -16,6 +16,10 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.signing import Signer
 import base64
 
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 
 
 # Create your views here.
@@ -83,7 +87,29 @@ def view_role(request,pk):
     except(Exception):
         return render(request, 'pagenotfound.html', {'e': Exception})
 
+def roles_report(request):
+    role = Roles.objects.all()
+    return render(request, 'role_report.html', {'role':role})
 
+def pdf_report_create(request):
+    role = Roles.objects.all()
+    template_path = 'pdf_report.html'
+    context = {'role': role}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+
+    response['Content-Disposition'] = 'attachment; filename="roles_report.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+        html, dest=response)
+    # if error then show some funny view
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
 
 def role_store(request):
     rolesObj = Roles()
