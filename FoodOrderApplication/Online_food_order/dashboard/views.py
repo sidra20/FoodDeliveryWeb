@@ -20,7 +20,11 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
-
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 # Create your views here.
 
@@ -90,6 +94,9 @@ def view_role(request,pk):
 def roles_report(request):
     role = Roles.objects.all()
     return render(request, 'role_report.html', {'role':role})
+def pagenotfound(request):
+    return render(request, 'pagenotfound.html')
+
 
 def pdf_report_create(request):
     role = Roles.objects.all()
@@ -110,6 +117,31 @@ def pdf_report_create(request):
     if pisa_status.err:
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
+
+def role_mail_template(request,pk):
+    pk = decrypt(pk)
+    try:
+        role = Roles.objects.get(id=pk)
+        html_content = render_to_string('role_mail_template.html', {'role': role})
+        text_content = strip_tags(html_content) #remove html tags
+        email = EmailMultiAlternatives(
+            #subject
+            "News",
+            #content
+            text_content,
+            #from
+           'admin@HFMS.com',
+            #to
+            ['sidraparacha27@gmail.com', 'sidrapa27@gmail.com']
+        )
+
+        email.attach_alternative(html_content,"text/html")
+        email.send()
+
+        return render(request, 'role_mail_template.html', {'role': role})
+    except(Exception):
+        return HttpResponse("Couldn't send email")
+
 
 def role_store(request):
     rolesObj = Roles()
